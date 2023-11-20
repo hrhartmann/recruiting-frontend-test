@@ -2,15 +2,17 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
+import BillList from "./BillList";
+
 function ListGroup({ items }) {
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [selectedCreditNote, setSelectedCreditNote] = useState(-1);
+  const [selectedCreditNote, setSelectedCreditNote] = useState(null);
   const [selectedBill, setSelectedBill] = useState(null);
+  const [selectedBillIndex, setSelectedBillIndex] = useState(-1);
 
   const resetSelection = () => {
     handleClose();
-    setSelectedIndex(-1);
-    setSelectedCreditNote(-1);
+    // setSelectedIndex(-1);
+    setSelectedCreditNote(null);
     setSelectedBill(null);
   };
 
@@ -46,87 +48,38 @@ function ListGroup({ items }) {
 
   return (
     <>
-      {true && (
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>{modalMsg}</Modal.Title>
-          </Modal.Header>
-          {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
-          <Modal.Footer>
-            <Button variant="primary" onClick={resetSelection}>
-              {modalContinueMsg}
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalMsg}</Modal.Title>
+        </Modal.Header>
+        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
+        <Modal.Footer>
+          <Button variant="primary" onClick={resetSelection}>
+            {modalContinueMsg}
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-      <h2 style={{ textAlign: "center" }}>{selectBillMsg}</h2>
-
-      <ul className="list-group">
-        {received.map((bill, index) => (
-          <li
-            className={
-              selectedIndex === index
-                ? "list-group-item active"
-                : "list-group-item"
-            }
-            key={bill.id}
-            onClick={() => {
-              setSelectedIndex(index);
-              setSelectedBill(bill);
-            }}
-          >
-            <div class="container text-center">
-              <div class="row">
-                <div class="col">
-                  inv_{index} ({bill.organization_id})
-                </div>
-                <div class="col">
-                  ${bill.amount * usdToClp}CLP ({bill.amount}
-                  USD)
-                </div>
-                <div class="col">{recivedMsg}</div>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-      {selectedIndex !== -1 && (
-        <>
-          <h2 style={{ textAlign: "center" }}>{selectCreditMsg}</h2>
-          <ul className="list-group">
-            {creditNotes
-              .filter((creditNote) => creditNote.reference === selectedBill.id)
-              .map((creditNote, cnindex) => (
-                <li
-                  className={
-                    selectedCreditNote === cnindex
-                      ? "list-group-item active"
-                      : "list-group-item"
-                  }
-                  key={creditNote.id}
-                  onClick={() => {
-                    setSelectedCreditNote(cnindex);
-                  }}
-                >
-                  <div class="container text-center">
-                    <div class="row">
-                      <div class="col">
-                        {cnindex} ({creditNote.organization_id})
-                      </div>
-                      <div class="col">
-                        ${creditNote.amount * usdToClp}CLP ({creditNote.amount}
-                        USD)
-                      </div>
-                      <div class="col">inv_{selectedIndex}</div>
-                    </div>
-                  </div>
-                </li>
-              ))}
-          </ul>
-        </>
+      <BillList
+        title={selectBillMsg}
+        items={received}
+        usdToClp={usdToClp}
+        setSelectItem={setSelectedBill}
+        setIndex={setSelectedBillIndex}
+      />
+      {selectedBill !== null && (
+        <BillList
+          title={selectBillMsg}
+          items={creditNotes.filter(
+            (creditNote) => creditNote.reference === selectedBill.id
+          )}
+          usdToClp={usdToClp}
+          setSelectItem={setSelectedCreditNote}
+          setIndex={() => {}}
+          lastColMsg={"inv_" + selectedBillIndex}
+        />
       )}
-      {selectedCreditNote !== -1 && (
+      {selectedCreditNote !== null && (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <button className="btn btn-primary" onClick={handleShow}>
             {okMsg}
