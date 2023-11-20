@@ -7,7 +7,7 @@ function BillList({
   setSelectItem,
   setIndex,
   lastColMsg = "",
-  prevSelectedIndex = -1,
+  baseIndex = 0,
 }) {
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
@@ -35,15 +35,13 @@ function BillList({
               <div className="container text-center">
                 <div className="row">
                   <div className="col">
-                    {index} ({item.organization_id})
+                    inv_{index + baseIndex} ({item.organization_id})
                   </div>
                   <div className="col">
                     ${item.amount * usdToClp}CLP ({item.amount}
                     USD)
                   </div>
-                  <div className="col">
-                    {lastColMsg ? lastColMsg : "inv_" + { prevSelectedIndex }}
-                  </div>
+                  <div className="col">{lastColMsg}</div>
                 </div>
               </div>
             </li>

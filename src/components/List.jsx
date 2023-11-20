@@ -78,6 +78,7 @@ function ListGroup({ items }) {
           setSelectItem={setSelectedCreditNote}
           setIndex={() => {}}
           lastColMsg={"inv_" + selectedBillIndex}
+          baseIndex={received.length}
         />
       )}
       {selectedCreditNote !== null && (
