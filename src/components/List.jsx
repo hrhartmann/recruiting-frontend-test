@@ -7,6 +7,13 @@ function ListGroup({ items }) {
   const [selectedCreditNote, setSelectedCreditNote] = useState(-1);
   const [selectedBill, setSelectedBill] = useState(null);
 
+  const resetSelection = () => {
+    handleClose();
+    setSelectedIndex(-1);
+    setSelectedCreditNote(-1);
+    setSelectedBill(null);
+  };
+
   const usdToClp = 800;
 
   items = items.map((item) => {
@@ -46,7 +53,7 @@ function ListGroup({ items }) {
           </Modal.Header>
           {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
           <Modal.Footer>
-            <Button variant="primary" onClick={handleClose}>
+            <Button variant="primary" onClick={resetSelection}>
               {modalContinueMsg}
             </Button>
           </Modal.Footer>
