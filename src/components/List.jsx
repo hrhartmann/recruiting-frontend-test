@@ -7,6 +7,15 @@ function ListGroup({ items }) {
   const [selectedCreditNote, setSelectedCreditNote] = useState(-1);
   const [selectedBill, setSelectedBill] = useState(null);
 
+  const usdToClp = 800;
+
+  items = items.map((item) => {
+    if (item.currency === "CLP") {
+      return { ...item, amount: item.amount / usdToClp };
+    }
+    return item;
+  });
+
   const received = items.filter((item) => item.type === "received");
   const creditNotes = items.filter((item) => item.type === "credit_note");
 
@@ -63,10 +72,12 @@ function ListGroup({ items }) {
             <div class="container text-center">
               <div class="row">
                 <div class="col">
-                  inv_{index}
-                  {bill.organization_id}
+                  inv_{index} ({bill.organization_id})
                 </div>
-                <div class="col">{bill.amount}</div>
+                <div class="col">
+                  ${bill.amount * usdToClp}CLP ({bill.amount}
+                  USD)
+                </div>
                 <div class="col">{recivedMsg}</div>
               </div>
             </div>
@@ -94,10 +105,12 @@ function ListGroup({ items }) {
                   <div class="container text-center">
                     <div class="row">
                       <div class="col">
-                        {cnindex}
-                        {creditNote.organization_id}
+                        {cnindex} ({creditNote.organization_id})
                       </div>
-                      <div class="col">{creditNote.amount}</div>
+                      <div class="col">
+                        ${creditNote.amount * usdToClp}CLP ({creditNote.amount}
+                        USD)
+                      </div>
                       <div class="col">inv_{selectedIndex}</div>
                     </div>
                   </div>
