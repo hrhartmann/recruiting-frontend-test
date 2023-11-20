@@ -66,6 +66,7 @@ function ListGroup({ items }) {
         usdToClp={usdToClp}
         setSelectItem={setSelectedBill}
         setIndex={setSelectedBillIndex}
+        lastColMsg={recivedMsg}
       />
       {selectedBill !== null && (
         <BillList
