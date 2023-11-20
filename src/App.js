@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react"
+import List from './components/List';
 
-function App() {
+const App = () => {
+  const [bills, setBills] = useState([])
+
+  const fetchUserData = () => {
+    fetch('http://recruiting.api.bemmbo.com/invoices/pending')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        setBills(data);
+      })
+      .catch(error => console.error('There has been a problem with your fetch operation:', error));
+  }
+
+  useEffect(() => {
+    fetchUserData()
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <List items={bills}></List>
   );
 }
 
